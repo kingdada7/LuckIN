@@ -23,7 +23,7 @@ export default function SignUp() {
   const [error, setError] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [adminToken, setAdminToken] = useState("");
+  const [adminInviteToken, setAdminInviteToken] = useState("");
   const [fullname, setFullname] = useState("");
   const navigate = useNavigate();
   const { updateUser } = useContext(UserContext);
@@ -61,7 +61,7 @@ export default function SignUp() {
         name: fullname,
         profileImageUrl,
 
-        adminToken,
+        adminInviteToken,
       });
 
       const { token, role } = response.data;
@@ -106,22 +106,22 @@ export default function SignUp() {
               <div className="grid gap-2">
                 <Label htmlFor="fullname">Full Name</Label>
                 <Input
-                  id="fullname"
+                  value={fullname}
                   type="text"
                   placeholder="John Doe"
                   required
-                  onChange={(e) => setFullname(e.target.value)}
+                  onChange={({target}) => setFullname(target.value)}
                 />
               </div>
 
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
-                  id="email"
+                  value={email}
                   type="email"
                   placeholder="m@example.com"
                   required
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={({target}) => setEmail(target.value)}
                 />
               </div>
 
@@ -130,23 +130,23 @@ export default function SignUp() {
                   <Label htmlFor="password">Password</Label>
                 </div>
                 <Input
-                  id="password"
+                  value={password}
                   type="password"
                   required
-                  onChange={(e) => setPassword(e.target.value)}
-                  value={password}
+                  onChange={({target}) => setPassword(target.value)}
+                  placeholder="••••••••"
                 />
               </div>
 
               <div className="grid gap-2">
                 <Label htmlFor="admin-token">Admin Invite Token</Label>
                 <Input
-                  id="admin-token"
+                  
                   type="text"
-                  value={adminToken}
+                  value={adminInviteToken}
                   placeholder="6-digit token"
                  
-                  onChange={(e) => setAdminToken(e.target.value)}
+                  onChange={({target}) => setAdminInviteToken(target.value)}
                 />
               </div>
             </div>

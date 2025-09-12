@@ -108,11 +108,11 @@ const { updateUser } = useContext(UserContext);
                 />
               </div>
             </div>
-            <CardFooter className="flex-col gap-2">
+            <CardFooter className="flex-col gap-2 mt-6">
               <Button type="submit" className="w-full">
                 Login
               </Button>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full mt-4">
                 Login with Google
               </Button>
             </CardFooter>

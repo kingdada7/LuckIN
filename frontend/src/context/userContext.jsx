@@ -26,6 +26,7 @@ const UserProvider = ({ children }) => {
                 setUser(response.data);
             } catch (error) {
                 console.error("Error fetching user details:", error);
+                clearUser();
             } finally {
                 setLoading(false);
             }

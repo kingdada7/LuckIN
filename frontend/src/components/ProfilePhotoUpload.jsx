@@ -1,27 +1,40 @@
-import React, { useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LucideTrash, Upload } from "lucide-react";
+import React, { useRef, useState, useEffect } from "react";
+import { LucideTrash, LucideUpload, LucideUser } from "lucide-react";
 
 export default function ProfilePhotoUpload({ image, setImage }) {
   const fileInputRef = useRef(null);
-  const [preview, setPreview] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
-  // Handle file selection
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
+  // Update preview whenever "image" changes (file or string URL)
+  useEffect(() => {
+    if (!image) {
+      setPreviewUrl(null);
+      return;
+    }
+
+    if (typeof image === "string") {
+      // Already a saved image URL
+      setPreviewUrl(image);
+    } else if (image instanceof File) {
+      // Fresh upload, create object URL
+      const preview = URL.createObjectURL(image);
+      setPreviewUrl(preview);
+
+      // Clean up URL when component unmounts
+      return () => URL.revokeObjectURL(preview);
+    }
+  }, [image]);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
     if (file) {
       setImage(file);
-
-      // Create a preview URL
-      const previewUrl = URL.createObjectURL(file);
-      setPreview(previewUrl);
     }
   };
+
   const handleRemoveImage = () => {
     setImage(null);
-    setPreview(null);
+    setPreviewUrl(null);
   };
 
   const onChooseFile = () => {
@@ -29,37 +42,42 @@ export default function ProfilePhotoUpload({ image, setImage }) {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <Avatar className="w-24 h-24">
-        {preview ? (
-          <AvatarImage src={preview} alt="Profile preview" />
-        ) : (
-          <AvatarFallback>U</AvatarFallback>
-        )}
-      </Avatar>
-
-      {/* Hidden file input */}
-      <Input
+    <div className="flex justify-center mb-6">
+      <input
         type="file"
         accept="image/*"
         ref={fileInputRef}
         onChange={handleFileChange}
-        className=""
+        className="hidden"
       />
 
-      <div className="flex gap-2 p-2">
-        <Button onClick={onChooseFile} variant="outline">
-          Choose Photo
-          <Upload className="mr-2 h-4 w-4" />
-        </Button>
-        <Button
-          onClick={handleRemoveImage}
-       
-          className="w-8 h-8  bg-red-500 text-white  "
-        >
-          <LucideTrash className=" h-4 w-4 " />
-        </Button>
-      </div>
+      {!previewUrl ? (
+        <div className="w-20 h-20 flex items-center justify-center bg-blue-100/50 rounded-full relative cursor-pointer">
+          <LucideUser className="w-16 h-16 text-blue-500" />
+          <button
+            type="button"
+            className="flex items-center justify-center bg-blue-500 text-white rounded-full absolute -bottom-1 -right-1 w-8 h-8 cursor-pointer"
+            onClick={onChooseFile}
+          >
+            <LucideUpload className="w-6 h-6" />
+          </button>
+        </div>
+      ) : (
+        <div className="relative">
+          <img
+            src={previewUrl}
+            alt="profile photo"
+            className="w-20 h-20 rounded-full object-cover"
+          />
+          <button
+            type="button"
+            className="flex items-center justify-center bg-red-500 text-white rounded-full absolute -bottom-1 -right-1 w-8 h-8 cursor-pointer"
+            onClick={handleRemoveImage}
+          >
+            <LucideTrash className="w-6 h-6" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

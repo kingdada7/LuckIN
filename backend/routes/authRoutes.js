@@ -27,7 +27,7 @@ authRoutes.post("/upload-profile-image", upload.single("image"), (req, res) => {
   }`;
   res
     .status(200)
-    .json({ message: "File uploaded successfully", filePath: imageUrl });
+    .json({ message: "File uploaded successfully", imageUrl });
 });
 
 export default authRoutes;
