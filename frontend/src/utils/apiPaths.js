@@ -1,5 +1,5 @@
 export const API_BASE_URL =
-  process.NODE_ENV === "production"
+  process.env.NODE_ENV === "production"
     ? "https://luckin-vubx.onrender.com"
     : "http://localhost:5000";
 
