@@ -173,9 +173,7 @@ export default function SignUp() {
         </CardContent>
 
         <CardFooter className="flex-col gap-2">
-          <Button variant="outline" className="w-full">
-            Login with Google
-          </Button>
+         
           <CardAction className="flex items-center ">
             <p>Already have an account? </p>
             <Button variant="link">

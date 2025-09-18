@@ -132,9 +132,7 @@ const { updateUser } = useContext(UserContext);
               <Button type="submit" className="w-full">
                 Login
               </Button>
-              <Button variant="outline" className="w-full mt-4">
-                Login with Google
-              </Button>
+              
             </CardFooter>
           </form>
         </CardContent>
