@@ -64,6 +64,10 @@ export function SideMenu() {
                   </div>
                 )}
                 <h5 className="text-gray-950 font-medium leading-6 mt-2">
+
+                  { user?.organizationToken || ""}
+                </h5>
+                <h5 className="text-gray-950 font-medium leading-6 mt-2">
                   {user?.name || ""}
                 </h5>
                 <p className="text-[12px] text-gray-600">{user?.email || ""}</p>

@@ -30,7 +30,7 @@ const taskSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["pending", "in-progress", "completed"],
+      enum: ["pending", "inProgress", "completed"],
       default: "pending",
     },
     priority: {
@@ -59,6 +59,13 @@ const taskSchema = new mongoose.Schema(
     },
     
     todoChecklist: [todoSchema],
+
+       // 🔑 New field to isolate data per account/org
+    organizationToken: {
+      type: String,
+      required: true,
+      uppercase: true,
+    },
   },
 
   { timestamps: true }

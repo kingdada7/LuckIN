@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema(
+const organizationSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -19,13 +19,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-
     role: {
       type: String,
-      enum: ["member", "admin"],
-      default: "member",
+      enum: ["admin"],
+      default: "admin",
     },
-
     organizationToken: {
       type: String,
       required: true,
@@ -35,6 +33,6 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+const Organization = mongoose.model("Organization", organizationSchema);
 
-export default User;
+export default Organization;

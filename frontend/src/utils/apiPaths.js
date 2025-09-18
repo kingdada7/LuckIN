@@ -26,6 +26,8 @@ export const API_ENDPOINTS = {
     CREATE_TASK: "/api/tasks",
     UPDATE_TASK: (taskId) => `/api/tasks/${taskId}`,
     DELETE_TASK: (taskId) => `/api/tasks/${taskId}`,
+    UPDATE_TASK_STATUS: (taskId) => `/api/tasks/${taskId}/status`,
+    UPDATE_TASK_CHECKLIST: (taskId) => `/api/tasks/${taskId}/todo`,
   },
 
   REPORTS: {

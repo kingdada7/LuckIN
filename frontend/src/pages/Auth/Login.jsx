@@ -8,6 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState,useContext } from "react";
@@ -24,6 +31,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [userType, setUserType] = useState("");
  
 const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
@@ -45,6 +53,7 @@ const { updateUser } = useContext(UserContext);
       const response = await axiosInstance.post(API_ENDPOINTS.AUTH.LOGIN, {
         email,
         password,
+        userType,
       });
 
       console.log("Login API response:", response.data);
@@ -83,6 +92,17 @@ const { updateUser } = useContext(UserContext);
         <CardContent>
           <form onSubmit={handleLogin}>
             <div className="flex flex-col gap-6">
+              <div className="grid gap-2 mt-6">
+                <Select onValueChange={(value) => setUserType(value)}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="organization">Organization</SelectItem>
+                    <SelectItem value="member">Member</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input

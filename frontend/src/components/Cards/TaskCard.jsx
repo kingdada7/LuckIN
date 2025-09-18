@@ -23,7 +23,7 @@ const TaskCard = ({
     switch (status) {
       case "completed":
         return "bg-lime-100 text-lime-800 border border-lime-500/20 ";
-      case "in Progress":
+      case "inProgress":
         return "bg-cyan-100 text-cyan-800 border border-cyan-500/20 ";
       default:
         return "bg-violet-100 text-violet-800 border border-violet-500/20 ";
@@ -59,7 +59,7 @@ const TaskCard = ({
       </div>
       <div
         className={`px-4 border-l-[3px] ${
-          status === "In Progress"
+          status === "inProgress"
             ? "border-cyan-500"
             : status === "completed"
             ? "border-indigo-500"

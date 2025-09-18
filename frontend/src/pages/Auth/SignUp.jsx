@@ -8,7 +8,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+
 import { Label } from "@/components/ui/label";
 import ProfilePhotoUpload from "../../components/ProfilePhotoUpload";
 import { useContext, useState } from "react";
@@ -22,12 +30,13 @@ export default function SignUp() {
   const [profilePic, setProfilePic] = useState(null);
   const [error, setError] = useState(null);
   const [email, setEmail] = useState("");
+  const [userType, setUserType] = useState("");
   const [password, setPassword] = useState("");
   const [adminInviteToken, setAdminInviteToken] = useState("");
+  const [organizationToken, setOrganizationToken] = useState("");
   const [fullname, setFullname] = useState("");
   const navigate = useNavigate();
   const { updateUser } = useContext(UserContext);
-
 
   //handle sign up
   const handleSignUp = async (e) => {
@@ -61,7 +70,8 @@ export default function SignUp() {
         name: fullname,
         profileImageUrl,
 
-        adminInviteToken,
+        userType,
+        organizationToken,
       });
 
       const { token, role } = response.data;
@@ -83,6 +93,7 @@ export default function SignUp() {
       }
     }
   };
+  console.log(userType);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
@@ -110,7 +121,7 @@ export default function SignUp() {
                   type="text"
                   placeholder="John Doe"
                   required
-                  onChange={({target}) => setFullname(target.value)}
+                  onChange={({ target }) => setFullname(target.value)}
                 />
               </div>
 
@@ -121,7 +132,7 @@ export default function SignUp() {
                   type="email"
                   placeholder="m@example.com"
                   required
-                  onChange={({target}) => setEmail(target.value)}
+                  onChange={({ target }) => setEmail(target.value)}
                 />
               </div>
 
@@ -133,22 +144,25 @@ export default function SignUp() {
                   value={password}
                   type="password"
                   required
-                  onChange={({target}) => setPassword(target.value)}
+                  onChange={({ target }) => setPassword(target.value)}
                   placeholder="••••••••"
                 />
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="admin-token">Admin Invite Token</Label>
-                <Input
-                  
-                  type="text"
-                  value={adminInviteToken}
-                  placeholder="6-digit token"
-                 
-                  onChange={({target}) => setAdminInviteToken(target.value)}
-                />
+              <div className="grid gap-2 mt-6">
+                <Select onValueChange={(value) => setUserType(value)}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="organization">Organization</SelectItem>
+                    <SelectItem value="member">Member</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
+              {userType === "member" ? (
+                <Input type="text" placeholder="Organization Token" value={organizationToken } onChange={({ target }) => setOrganizationToken (target.value)} />
+              ) : null}
             </div>
 
             <Button type="submit" className="w-full">

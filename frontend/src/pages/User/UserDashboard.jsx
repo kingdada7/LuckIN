@@ -34,7 +34,7 @@ const UserDashboard = () => {
     const taskPriorityLevels = data?.taskPriorityLevels || null;
     const taskDistributionData = [
       { status: "pending", count: taskDistribution?.pending || 0 },
-      { status: "in progress", count: taskDistribution?.inProgress || 0 },
+      { status: "inProgress", count: taskDistribution?.inProgress || 0 },
       { status: "completed", count: taskDistribution?.completed || 0 },
     ];
     setPieChartData(taskDistributionData);
@@ -53,7 +53,7 @@ const UserDashboard = () => {
       );
       if (response.data) {
         setDashboardData(response.data);
-        prepareChartData(response.data?.charts);
+        prepareChartData(response.data?.charts || null);
       }
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
@@ -68,7 +68,7 @@ const UserDashboard = () => {
   }, []);
 
   return (
-    <DashboardLayout>
+    <DashboardLayout activeMenu="Dashboard">
       <div className="card my-5">
         <div className="col-span-3">
           <h2 className="text-xl md:text-2xl">Good Day {user?.name}</h2>
@@ -81,7 +81,7 @@ const UserDashboard = () => {
           <InfoCard
             label="TotalTasks"
             value={addThousandsSeparator(
-              dashboardData?.charts?.taskDistribution?.All || 0
+              dashboardData?.charts?.taskDistribution?.all || 0
             )}
             color="bg-blue-500"
           />
@@ -93,9 +93,9 @@ const UserDashboard = () => {
             color="bg-violet-500"
           />
           <InfoCard
-            label="overdue Tasks"
+            label="In Progress Tasks"
             value={addThousandsSeparator(
-              dashboardData?.charts?.taskDistribution?.inprogress || 0
+              dashboardData?.charts?.taskDistribution?.inProgress || 0
             )}
             color="bg-cyan-500"
           />

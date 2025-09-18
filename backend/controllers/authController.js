@@ -1,32 +1,58 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-
+import Organization from "../models/organization.js";
+import { nanoid } from "nanoid";
 // generate jwt tokens
 const generateToken = (user) => {
-  return jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: "1d",
-  });
+  return jwt.sign(
+    {
+      id: user._id,
+      organizationToken: user.organizationToken,
+      userType: user.userType,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "1d",
+    }
+  );
 };
 //@desc    Register a new user
 //@route   POST /api/auth/register
 //@access  Public
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password, profileImageUrl, adminInviteToken } =
-      req.body;
+    const {
+      name,
+      email,
+      password,
+      profileImageUrl,
+      userType,
+      organizationToken,
+    } = req.body;
+    console.log(req.body);
+
+    const model = userType === "member" ? User : Organization;
     // CHECK IF USER ALREADY EXISTS
-    const userExists = await User.findOne({ email });
+    const userExists = await model.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
-    //determine user role:admin if correct token is provided ,otherwise memeber
-    let role = "member";
-    if (
-      adminInviteToken &&
-      adminInviteToken == process.env.ADMIN_INVITE_TOKEN
-    ) {
-      role = "admin";
+
+    if (userType === "member" && !organizationToken) {
+      return res
+        .status(400)
+        .json({ message: "Organization token is required" });
+    }
+
+    // validate the organization Token
+    if (userType === "member") {
+      const organization = await Organization.findOne({
+        organizationToken,
+      });
+      if (!organization) {
+        return res.status(400).json({ message: "Invalid organization token" });
+      }
     }
 
     //hash password
@@ -34,14 +60,15 @@ const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, userSalt);
 
     //create user
-    const user = await User.create({
+    const user = await model.create({
       name,
       email,
       password: hashedPassword,
       profileImageUrl,
-      role,
+      organizationToken: userType === "member" ? organizationToken : nanoid(5),
     });
 
+    user.userType = userType;
     //return user data with jwt
     res.status(201).json({
       _id: user._id,
@@ -49,10 +76,11 @@ const registerUser = async (req, res) => {
       email: user.email,
       profileImageUrl: user.profileImageUrl,
       role: user.role,
-      token: generateToken(user._id),
+      token: generateToken(user),
+      organizationToken: user?.organizationToken,
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -62,9 +90,10 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, userType } = req.body;
+    const model = userType === "member" ? User : Organization;
     //check for user email
-    const user = await User.findOne({ email });
+    const user = await model.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
@@ -73,6 +102,7 @@ const loginUser = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
+    user.userType = userType;
     //return user data with jwt
     res.status(200).json({
       _id: user._id,
@@ -80,7 +110,8 @@ const loginUser = async (req, res) => {
       email: user.email,
       profileImageUrl: user.profileImageUrl,
       role: user.role,
-      token: generateToken(user._id),
+      token: generateToken(user),
+      organizationToken: user?.organizationToken,
     });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
@@ -129,7 +160,7 @@ const updateUserProfile = async (req, res) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
-        role: updatedUser.role,
+      role: updatedUser.role,
       token: generateToken(updatedUser._id),
     });
   } catch (error) {

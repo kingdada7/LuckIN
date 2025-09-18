@@ -41,7 +41,7 @@ const MyTask = () => {
   };
 
   const handleClick = (taskId) => {
-    navigate(`/user/task-details/${taskId}`);
+    navigate(`/user/taskdetail/${taskId}`);
   };
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const MyTask = () => {
 
   return (
     <div>
-      <DashboardLayout activeMenu="Manage Task">
+      <DashboardLayout activeMenu="MyTask">
         <div className="my-5">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between ">
             <div className="flex items-center justify-between gap-3">

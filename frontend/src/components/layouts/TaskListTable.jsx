@@ -50,7 +50,7 @@ export function TaskListTable({ tableData }) {
       </TableHeader>
       <TableBody>
         {tableData.map((task) => (
-          <TableRow key={task._id}>
+          <TableRow key={task.id}>
             <TableCell>{task.title}</TableCell>
 
             <TableCell>

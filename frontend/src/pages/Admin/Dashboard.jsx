@@ -32,7 +32,7 @@ const Dashboard = () => {
     const taskPriorityLevels = data?.taskPriorityLevels || null;
     const taskDistributionData = [
       { status: "pending", count: taskDistribution?.pending || 0 },
-      { status: "in progress", count: taskDistribution?.inProgress || 0 },
+      { status: "inProgress", count: taskDistribution?.inProgress || 0 },
       { status: "completed", count: taskDistribution?.completed || 0 },
     ];
     setPieChartData(taskDistributionData);
@@ -79,7 +79,7 @@ const Dashboard = () => {
           <InfoCard
             label="TotalTasks"
             value={addThousandsSeparator(
-              dashboardData?.charts?.taskDistribution?.All || 0
+              dashboardData?.charts?.taskDistribution?.all || 0
             )}
             color="bg-blue-500"
           />
@@ -91,9 +91,9 @@ const Dashboard = () => {
             color="bg-violet-500"
           />
           <InfoCard
-            label="overdue Tasks"
+            label="In Progress Tasks"
             value={addThousandsSeparator(
-              dashboardData?.charts?.taskDistribution?.inprogress || 0
+              dashboardData?.charts?.taskDistribution?.inProgress || 0
             )}
             color="bg-cyan-500"
           />
